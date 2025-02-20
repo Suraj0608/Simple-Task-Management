@@ -140,11 +140,12 @@
 .task-form input,
 .task-form textarea,
 .task-form select {
-      padding: 0.5rem;
+      padding: 0.8rem;
       border-radius: 0.25rem;
       border: 1px solid #d1d5db;
       max-width: 100%;
       width: 70%;
+      /* padding: 1rem; */
 
       display: grid;
       /* justify-content: center; */
@@ -239,7 +240,9 @@
       /* text-overflow: ellipsis; */
       /* white-space: nowrap; */
 
-      text-align: justify;
+      text-align: center;
+      word-break: break-word; 
+      hyphens: auto;
 }
 
 .task-description {
@@ -256,6 +259,10 @@
       padding-right: 1rem;
       text-align: justify;
       padding-left: 0.5rem;
+      text-align: center;
+
+      word-break: break-word; 
+      hyphens: auto;
 }
 
 /* changed */
@@ -541,4 +548,28 @@
       border-bottom: 2px solid white;
       color: white;
       padding: 0.2rem;
+}
+
+.container.dark .task-form input,
+.container.dark .task-form textarea,
+.container.dark .task-form select {
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      border: 1px solid #d1d5db;
+      max-width: 100%;
+      width: 70%;
+
+      display: grid;
+      /* justify-content: center; */
+      align-self: center;
+
+      border-radius: 10px;
+
+      z-index: 10;
+      box-shadow: 5px 5px 10px rgba(195, 194, 212, 0.5);
+}
+.container.dark .add-button{
+      
+      z-index: 10;
+      box-shadow: 5px 5px 10px rgba(233, 228, 98, 0.5);
 }
