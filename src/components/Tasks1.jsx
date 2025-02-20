@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Tasks.css';
 
-const Temp_Dark_mode = () => {
+const Tasks1 = () => {
       const [tasks, setTasks] = useState([]);
       const [newTask, setNewTask] = useState({
             title: '',
@@ -10,7 +10,7 @@ const Temp_Dark_mode = () => {
       });
       const [filter, setFilter] = useState('All');
       const [activeTab, setActiveTab] = useState('tasks');
-      const [darkMode, setDarkMode] = useState(false); // 🔹 Dark mode state
+      const [darkMode, setDarkMode] = useState(false);
 
       // Priority weights for sorting
       const priorityWeight = {
@@ -18,7 +18,6 @@ const Temp_Dark_mode = () => {
             'Medium': 2,
             'Low': 1
       };
-
 
       useEffect(() => {
             const savedTheme = localStorage.getItem('darkMode');
@@ -35,8 +34,6 @@ const Temp_Dark_mode = () => {
             });
       };
 
-
-
       // Sort tasks by priority
       const sortByPriority = (tasksToSort) => {
             return [...tasksToSort].sort((a, b) => {
@@ -51,6 +48,8 @@ const Temp_Dark_mode = () => {
                   return b.id - a.id;
             });
       };
+
+      const [taksUpdated, setTaksUpdated] = useState(false);
 
       // Load initial data from localStorage and then fetch from backend
       useEffect(() => {
@@ -74,7 +73,7 @@ const Temp_Dark_mode = () => {
             };
 
             loadTasks();
-      }, []);
+      }, [taksUpdated]);
 
       // Update localStorage whenever tasks change
       useEffect(() => {
@@ -166,11 +165,63 @@ const Temp_Dark_mode = () => {
             return false;
       });
 
-      // Rest of the component remains the same...
+      const [editmode, setEditmode] = useState(false);
+      const [updatedTask, setupdatedTask] = useState({
+            title: '',
+            description: '',
+            priority: ''
+      });
+      const [selectedId, setSetselectedId] = useState(0);
+
+      const handleEdit = (task) => {
+            setSetselectedId(task.id);
+            setupdatedTask({
+                  title: task.title,
+                  description: task.description,
+                  priority: task.priority
+            });
+            setEditmode(!editmode);
+      };
+
+      const handleCancelUpdateTask = () => {
+            setEditmode(!editmode);
+            setSetselectedId(0);
+            setupdatedTask({
+                  title: '',
+                  description: '',
+                  priority: ''
+            });
+      };
+
+      const handleComplete = async (task) => {
+            try {
+                  const response = await fetch(`http://localhost:5000/tasks/update/${task.id}`, {
+                        method: 'PUT',
+                        headers: {
+                              'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(updatedTask),
+                  });
+
+                  if (response.ok) {
+                        setTaksUpdated(prev => !prev); // Toggle to trigger useEffect
+                        setSetselectedId(0);
+                        setEditmode(!editmode);
+                        setupdatedTask({
+                              title: '',
+                              description: '',
+                              priority: ''
+                        });
+                  }
+            } catch (error) {
+                  console.log('Error updating task:', error);
+            }
+      };
+
       return (
             <div className={`container ${darkMode ? 'dark' : ''}`}>
                   <header className="header">
-                        <img src="Logo.png" alt="" style={{ height: '2.6rem' , marginTop:'0.5rem' }} />
+                        <img src="Logo.png" alt="" style={{ height: '2.6rem', marginTop: '0.5rem' }} />
                         <button className="dark-mode-toggle" onClick={toggleDarkMode}>
                               {darkMode ? <img width="24" height="24" src="https://img.icons8.com/material-rounded/24/do-not-disturb-2.png" alt="do-not-disturb-2" /> : <img width="24" height="24" src="https://img.icons8.com/material-rounded/24/do-not-disturb-2.png" alt="do-not-disturb-2" />}
                         </button>
@@ -242,11 +293,44 @@ const Temp_Dark_mode = () => {
 
                                     {filteredTasks.map((task) => (
                                           <div key={task.id} className="task-item">
-                                                <div className="task-title">{task.title}</div>
-                                                <div className="task-description">{task.description}</div>
-                                                <div className={`task-priority priority-${task.priority.toLowerCase()}`}>
-                                                      {task.priority}
-                                                </div>
+                                                {task.id === selectedId ? (
+                                                      <>
+                                                            <input
+                                                                  type="text"
+                                                                  placeholder="Enter title"
+                                                                  value={updatedTask.title}
+                                                                  onChange={(e) => setupdatedTask({ ...updatedTask, title: e.target.value })}
+
+                                                                  className='task-edit'
+                                                            />
+                                                            <input
+                                                                  type="text"
+                                                                  placeholder="Enter description"
+                                                                  value={updatedTask.description}
+                                                                  onChange={(e) => setupdatedTask({ ...updatedTask, description: e.target.value })}
+
+                                                                  className='task-edit'
+                                                            />
+                                                            <select
+                                                                  value={updatedTask.priority}
+                                                                  onChange={(e) => setupdatedTask({ ...updatedTask, priority: e.target.value })}
+
+                                                                  className='task-edit'
+                                                            >
+                                                                  <option value="High">High</option>
+                                                                  <option value="Medium">Medium</option>
+                                                                  <option value="Low">Low</option>
+                                                            </select>
+                                                      </>
+                                                ) : (
+                                                      <>
+                                                            <div className="task-title">{task.title}</div>
+                                                            <div className="task-description">{task.description}</div>
+                                                            <div className={`task-priority priority-${task.priority.toLowerCase()}`}>
+                                                                  {task.priority}
+                                                            </div>
+                                                      </>
+                                                )}
                                                 <div className="task-actions">
                                                       {!task.completed && (
                                                             <button
@@ -257,17 +341,33 @@ const Temp_Dark_mode = () => {
                                                             </button>
                                                       )}
 
-                                                      <button
-                                                            onClick={() => deleteTask(task.id)}
-                                                            className="delete-btn"
-                                                      >
-                                                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 24 24">
-                                                                  <path d="M 10 2 L 9 3 L 3 3 L 3 5 L 4.109375 5 L 5.8925781 20.255859 L 5.8925781 20.263672 C 6.023602 21.250335 6.8803207 22 7.875 22 L 16.123047 22 C 17.117726 22 17.974445 21.250322 18.105469 20.263672 L 18.107422 20.255859 L 19.890625 5 L 21 5 L 21 3 L 15 3 L 14 2 L 10 2 z M 6.125 5 L 17.875 5 L 16.123047 20 L 7.875 20 L 6.125 5 z"></path>
-                                                            </svg>
-                                                      </button>
-                                                      <button className="edit-btn">
-                                                      <img width="30" height="30" src="https://img.icons8.com/plasticine/100/create-new.png" alt="create-new"/>
-                                                      </button>
+                                                      {task.id === selectedId ? (
+                                                            <button
+                                                                  onClick={() => handleCancelUpdateTask()}
+                                                                  className="delete-btn"
+                                                            >
+                                                                  <img width="22" height="22" src="https://t3.ftcdn.net/jpg/03/40/25/18/360_F_340251800_LCwH7U3LFo7DUnGNbpEKX5frMJJD8a6J.jpg" alt="create-new" />
+                                                            </button>
+                                                      ) : (
+                                                            <button
+                                                                  onClick={() => deleteTask(task.id)}
+                                                                  className="delete-btn"
+                                                            >
+                                                                  <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 24 24">
+                                                                        <path d="M 10 2 L 9 3 L 3 3 L 3 5 L 4.109375 5 L 5.8925781 20.255859 L 5.8925781 20.263672 C 6.023602 21.250335 6.8803207 22 7.875 22 L 16.123047 22 C 17.117726 22 17.974445 21.250322 18.105469 20.263672 L 18.107422 20.255859 L 19.890625 5 L 21 5 L 21 3 L 15 3 L 14 2 L 10 2 z M 6.125 5 L 17.875 5 L 16.123047 20 L 7.875 20 L 6.125 5 z"></path>
+                                                                  </svg>
+                                                            </button>
+                                                      )}
+                                                      {task.id === selectedId ? (
+                                                            <button onClick={() => handleComplete(task)} className="edit-btn tick">
+                                                                  <img width="22" height="22" src="https://static.vecteezy.com/system/resources/thumbnails/008/134/818/small/check-mark-icon-checkmark-right-symbol-tick-sign-ok-button-correct-circle-icon-free-vector.jpg" alt="create-new" />
+                                                            </button>
+                                                      ) : (
+                                                            <button onClick={() => handleEdit(task)} className="edit-btn">
+                                                                  <img width="30" height="30"
+                                                                        src="https://img.icons8.com/plasticine/100/create-new.png" alt="create-new" />
+                                                            </button>
+                                                      )}
                                                 </div>
                                           </div>
                                     ))}
@@ -278,4 +378,4 @@ const Temp_Dark_mode = () => {
       );
 };
 
-export default Temp_Dark_mode;
+export default Tasks1;

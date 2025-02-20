@@ -1,13 +1,12 @@
 import React from 'react'
-// import Tasks from './components/Tasks'
+import Tasks1 from './components/Tasks1'
 // import Temp from './components/Temp'
-import Temp_Dark_mode from './components/Temp_Dark_mode'
+// import Temp_Dark_mode from './components/Temp_Dark_mode'
 
 const App = () => {
   return (
     <>
-      {/* <Tasks/> */}
-      <Temp_Dark_mode/>
+      <Tasks1/>
     </>
   )
 }

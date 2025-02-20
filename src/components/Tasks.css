@@ -121,6 +121,7 @@
       align-items: center;
       font-family: 'Montserrat', sans-serif;
 
+      
 }
 
 .task-form {
@@ -150,6 +151,9 @@
       align-self: center;
 
       border-radius: 10px;
+
+      z-index: 10;
+      box-shadow: 5px 5px 10px rgba(4, 3, 21, 0.5);
 }
 .task-form textarea{
       height: 5rem;
@@ -165,6 +169,9 @@
       cursor: pointer;
 
       margin-top: 1rem;
+
+      z-index: 100;
+      box-shadow: 5px 5px 10px rgba(4, 3, 21, 0.5);
 }
 
 .tasks-container {
@@ -320,6 +327,16 @@
 
 .priority-low {
       color: #059669;
+}
+
+.task-item .task-edit {
+      background: transparent;
+      outline: none;
+      border: none;
+
+      border-bottom: 2px solid black;
+      color: black;
+      padding: 0.2rem;
 }
 
 /* Responsive Design */
@@ -515,4 +532,13 @@
 .container.dark .dark-mode-toggle {
       /* background-color: #111; */
       color: white;
+}
+.container.dark .task-item .task-edit {
+      background: transparent;
+      outline: none;
+      border: none;
+
+      border-bottom: 2px solid white;
+      color: white;
+      padding: 0.2rem;
 }
