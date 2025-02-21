@@ -331,6 +331,7 @@ const Tasks1 = () => {
                                                             </div>
                                                       </>
                                                 )}
+                                                
                                                 <div className="task-actions">
                                                       {!task.completed && (
                                                             <button
@@ -358,6 +359,7 @@ const Tasks1 = () => {
                                                                   </svg>
                                                             </button>
                                                       )}
+
                                                       {task.id === selectedId ? (
                                                             <button onClick={() => handleComplete(task)} className="edit-btn tick">
                                                                   <img width="22" height="22" src="https://static.vecteezy.com/system/resources/thumbnails/008/134/818/small/check-mark-icon-checkmark-right-symbol-tick-sign-ok-button-correct-circle-icon-free-vector.jpg" alt="create-new" />

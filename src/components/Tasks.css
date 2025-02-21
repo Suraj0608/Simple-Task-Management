@@ -63,9 +63,8 @@
 
       z-index: 100;
       box-shadow: 5px 5px 10px rgba(4, 3, 21, 0.5);
+      padding: 12px 15px;
 }
-
-
 
 
 .sidebar-button.active {
