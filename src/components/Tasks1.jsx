@@ -223,7 +223,7 @@ const Tasks1 = () => {
                   <header className="header">
                         <img src="Logo.png" alt="" style={{ height: '2.6rem', marginTop: '0.5rem' }} />
                         <button className="dark-mode-toggle" onClick={toggleDarkMode}>
-                              {darkMode ? <img width="24" height="24" src="https://img.icons8.com/material-rounded/24/do-not-disturb-2.png" alt="do-not-disturb-2" /> : <img width="24" height="24" src="https://img.icons8.com/material-rounded/24/do-not-disturb-2.png" alt="do-not-disturb-2" />}
+                              {darkMode ? <img width="24" height="24" src="https://img.icons8.com/external-filled-color-icons-papa-vector/78/external-Light-Mode-interface-filled-color-icons-papa-vector.png" alt="external-Light-Mode-interface-filled-color-icons-papa-vector"/> : <img width="24" height="24" src="https://img.icons8.com/material-rounded/24/do-not-disturb-2.png" alt="do-not-disturb-2" /> }
                         </button>
                   </header>
 
