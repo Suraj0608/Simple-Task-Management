@@ -103,11 +103,13 @@ const Tasks1 = () => {
                         setTasks(updatedTasks);
                         localStorage.setItem('tasks', JSON.stringify(updatedTasks));
 
+                        
                         setNewTask({
                               title: '',
                               description: '',
                               priority: 'High'
                         });
+
                   }
             } catch (error) {
                   console.error('Error adding task:', error);
@@ -218,8 +220,10 @@ const Tasks1 = () => {
             }
       };
 
+
       return (
             <div className={`container ${darkMode ? 'dark' : ''}`}>
+                  {/* ------------------ Header ----------------- */}
                   <header className="header">
                         <img src="Logo.png" alt="" style={{ height: '2.6rem', marginTop: '0.5rem' }} />
                         <button className="dark-mode-toggle" onClick={toggleDarkMode}>
@@ -228,6 +232,7 @@ const Tasks1 = () => {
                   </header>
 
                   <div className="main-content">
+                        {/* ----------------- sidebar -------------------- */}
                         <aside className="sidebar">
                               <button
                                     className={`sidebar-button ${activeTab === 'tasks' ? 'active' : ''}`}
@@ -243,9 +248,11 @@ const Tasks1 = () => {
                               </button>
                         </aside>
 
+                        {/* ----------------- main container -------------------- */}
                         <main className="main">
                               {activeTab === 'tasks' && (
-                                    <div className="task-form-container">
+                                    // task-form-container
+                                    <div className="task-form-container">     
                                           <h2>My Tasks</h2>
                                           <form onSubmit={handleSubmit} className="task-form">
                                                 <input
@@ -274,7 +281,10 @@ const Tasks1 = () => {
                                     </div>
                               )}
 
+
                               <div className="tasks-container">
+
+                                    {/* --------- tasks-header ---------- */}
                                     <div className="tasks-header">
                                           <div className="header-title">Title</div>
                                           <div className="header-description">Description</div>
@@ -291,9 +301,13 @@ const Tasks1 = () => {
                                           <div className="header-action">Action</div>
                                     </div>
 
+
+                                    {/* Stream Data 1 by 1 in a iterative manner */}
                                     {filteredTasks.map((task) => (
                                           <div key={task.id} className="task-item">
-                                                {task.id === selectedId ? (
+
+                                                {/* task-title, task-description, task-priority records */}
+                                                {task.id === selectedId ? (     // If edit option is enabled...
                                                       <>
                                                             <input
                                                                   type="text"
@@ -322,8 +336,8 @@ const Tasks1 = () => {
                                                                   <option value="Low">Low</option>
                                                             </select>
                                                       </>
-                                                ) : (
-                                                      <>
+                                                ) : (       // If edit option is not enabled...
+                                                      <>    
                                                             <div className="task-title">{task.title}</div>
                                                             <div className="task-description">{task.description}</div>
                                                             <div className={`task-priority priority-${task.priority.toLowerCase()}`}>
@@ -331,43 +345,56 @@ const Tasks1 = () => {
                                                             </div>
                                                       </>
                                                 )}
-                                                <div className="task-actions">
-                                                      {!task.completed ? (
-                                                            <button
-                                                                  onClick={() => toggleComplete(task.id, task.completed)}
-                                                                  className="complete-btn"
-                                                            >
-                                                                  <img width="30" height="30" src="https://img.icons8.com/color/48/task-completed.png" alt="task-completed" />
-                                                            </button>
-                                                      ) :
-                                                      (
-                                                            <button
-                                                                  onClick={() => toggleComplete(task.id, task.completed)}
-                                                                  className="complete-btn"
-                                                            >
-                                                                  <img width="30" height="30" src="https://img.icons8.com/color/48/undo.png" alt="undo"/>
-                                                            </button>
-                                                      )
-                                                }
 
+
+                                                {/* ---------- Task Action ---------- */}
+                                                <div className="task-actions">
+
+                                                      {/* ----------- Task Completion status ---------- */}
+                                                      {!task.completed ? (
+                                                            // If task status is in-complete...
+                                                            task.id !== selectedId && (   // If edit option is not enabled...
+                                                                        <button
+                                                                              onClick={() => toggleComplete(task.id, task.completed)}
+                                                                              className="complete-btn"
+                                                                        >
+                                                                              <img width="30" height="30" src="https://img.icons8.com/color/48/task-completed.png" alt="task-completed" />
+                                                                        </button>
+                                                                  )
+                                                            ) : 
+                                                            (// If task status is Complete...
+                                                                  <button
+                                                                        onClick={() => toggleComplete(task.id, task.completed)}
+                                                                        className="complete-btn"
+                                                                  >
+                                                                        <img width="30" height="30" src="https://img.icons8.com/color/48/undo.png" alt="undo"/>
+                                                                  </button>
+                                                            )
+                                                      }
+
+
+                                                      {/* ----------- Task Delete/Cancel-Edit ---------- */}
                                                       {task.id === selectedId ? (
-                                                            <button
-                                                                  onClick={() => handleCancelUpdateTask()}
-                                                                  className="delete-btn"
-                                                            >
-                                                                  <img width="22" height="22" src="https://t3.ftcdn.net/jpg/03/40/25/18/360_F_340251800_LCwH7U3LFo7DUnGNbpEKX5frMJJD8a6J.jpg" alt="create-new" />
-                                                            </button>
-                                                      ) : (
-                                                            <button
-                                                                  onClick={() => deleteTask(task.id)}
-                                                                  className="delete-btn"
-                                                            >
-                                                                  <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 24 24">
-                                                                        <path d="M 10 2 L 9 3 L 3 3 L 3 5 L 4.109375 5 L 5.8925781 20.255859 L 5.8925781 20.263672 C 6.023602 21.250335 6.8803207 22 7.875 22 L 16.123047 22 C 17.117726 22 17.974445 21.250322 18.105469 20.263672 L 18.107422 20.255859 L 19.890625 5 L 21 5 L 21 3 L 15 3 L 14 2 L 10 2 z M 6.125 5 L 17.875 5 L 16.123047 20 L 7.875 20 L 6.125 5 z"></path>
-                                                                  </svg>
-                                                            </button>
-                                                      )}
-                                                      {task.id === selectedId ? (
+                                                                  <button
+                                                                        onClick={() => handleCancelUpdateTask()}
+                                                                        className="delete-btn"
+                                                                  >
+                                                                        <img width="22" height="22" src="https://t3.ftcdn.net/jpg/03/40/25/18/360_F_340251800_LCwH7U3LFo7DUnGNbpEKX5frMJJD8a6J.jpg" alt="create-new" />
+                                                                  </button>
+                                                            ) : (
+                                                                  <button
+                                                                        onClick={() => deleteTask(task.id)}
+                                                                        className="delete-btn"
+                                                                  >
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 24 24">
+                                                                              <path d="M 10 2 L 9 3 L 3 3 L 3 5 L 4.109375 5 L 5.8925781 20.255859 L 5.8925781 20.263672 C 6.023602 21.250335 6.8803207 22 7.875 22 L 16.123047 22 C 17.117726 22 17.974445 21.250322 18.105469 20.263672 L 18.107422 20.255859 L 19.890625 5 L 21 5 L 21 3 L 15 3 L 14 2 L 10 2 z M 6.125 5 L 17.875 5 L 16.123047 20 L 7.875 20 L 6.125 5 z"></path>
+                                                                        </svg>
+                                                                  </button>
+                                                            )
+                                                      }
+
+                                                      {/* ----------- Edit Task ---------- */}
+                                                      {/* {task.id === selectedId ? (
                                                             <button onClick={() => handleComplete(task)} className="edit-btn tick">
                                                                   <img width="22" height="22" src="https://static.vecteezy.com/system/resources/thumbnails/008/134/818/small/check-mark-icon-checkmark-right-symbol-tick-sign-ok-button-correct-circle-icon-free-vector.jpg" alt="create-new" />
                                                             </button>
@@ -376,12 +403,27 @@ const Tasks1 = () => {
                                                                   <img width="30" height="30"
                                                                         src="https://img.icons8.com/plasticine/100/create-new.png" alt="create-new" />
                                                             </button>
+                                                      )} */}
+
+                                                      {/* ----------- Edit Task ---------- */}
+                                                      {!task.completed && (
+                                                            task.id === selectedId ? (
+                                                                  <button onClick={() => handleComplete(task)} className="edit-btn tick">
+                                                                        <img width="22" height="22" src="https://static.vecteezy.com/system/resources/thumbnails/008/134/818/small/check-mark-icon-checkmark-right-symbol-tick-sign-ok-button-correct-circle-icon-free-vector.jpg" alt="create-new" />
+                                                                  </button>
+                                                            ) : (
+                                                                  <button onClick={() => handleEdit(task)} className="edit-btn">
+                                                                        <img width="30" height="30"
+                                                                              src="https://img.icons8.com/plasticine/100/create-new.png" alt="create-new" />
+                                                                  </button>
+                                                            )
                                                       )}
                                                 </div>
                                           </div>
                                     ))}
                               </div>
                         </main>
+
                   </div>
             </div>
       );

@@ -2,7 +2,8 @@
 .container {
       min-height: 100vh;
       /* background-color: #e5e7eb; */
-      background-color: #F4F4F4;
+      /* background-color: #F4F4F4; */
+      /* background-color: rgb(231, 229, 229); */
 
 }
 
@@ -290,7 +291,8 @@
 
 /* changed */
 .task-actions button {
-      padding: 0.5rem 1rem;
+      /* padding: 0.5rem 1rem; */
+      padding: 0.5rem 0.25rem;
       border: none;
       border-radius: 0.25rem;
       cursor: pointer;
@@ -493,17 +495,19 @@
       margin-right: 2rem;
 }
 
-/* Dark Mode */
+/* ------ Dark Mode ------------ */
 .container.dark {
-      background-color: #1e2b3d;
       color: white;
+      background-color: #4b5563;
 }
 .container.dark .task-form-container {
       background-color: #4b5563;
       background-color: #020812e8;
       
       color: rgb(207, 198, 198);
-
+      
+      z-index: 1000;
+      box-shadow: 10px 10px 15px grey;
 }
 
 .container.dark .header {
@@ -518,11 +522,18 @@
       background-color: #374151;
       background-color: #020812e8;
       color: white;
+      box-shadow: 5px 5px 35px rgb(247 247 247 / 50%);
+      box-shadow: 5px 5px 35px rgba(224, 215, 215, 0.728);
 }
 .container.dark .sidebar-button {
       background-color: #374151;
       /* background-color: #020812e8; */
       color: white;
+
+      z-index: 100;
+      box-shadow: 3px 3px 8px grey;
+      box-shadow: 2px 2px 8px rgb(233, 233, 193);
+      padding: 12px 15px;
 }
 
 .container.dark .tasks-container {
@@ -577,4 +588,12 @@
       
       z-index: 10;
       box-shadow: 5px 5px 10px rgba(233, 228, 98, 0.5);
+      background-color: #f1ad23;
+}
+
+.container.dark .main-content{
+      background-color: #4b5563;
+}
+.container.dark .main{
+      background-color: #4b5563;
 }
