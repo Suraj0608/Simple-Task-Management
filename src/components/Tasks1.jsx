@@ -331,16 +331,24 @@ const Tasks1 = () => {
                                                             </div>
                                                       </>
                                                 )}
-                                                
                                                 <div className="task-actions">
-                                                      {!task.completed && (
+                                                      {!task.completed ? (
                                                             <button
                                                                   onClick={() => toggleComplete(task.id, task.completed)}
                                                                   className="complete-btn"
                                                             >
                                                                   <img width="30" height="30" src="https://img.icons8.com/color/48/task-completed.png" alt="task-completed" />
                                                             </button>
-                                                      )}
+                                                      ) :
+                                                      (
+                                                            <button
+                                                                  onClick={() => toggleComplete(task.id, task.completed)}
+                                                                  className="complete-btn"
+                                                            >
+                                                                  <img width="30" height="30" src="https://img.icons8.com/color/48/undo.png" alt="undo"/>
+                                                            </button>
+                                                      )
+                                                }
 
                                                       {task.id === selectedId ? (
                                                             <button
@@ -359,7 +367,6 @@ const Tasks1 = () => {
                                                                   </svg>
                                                             </button>
                                                       )}
-
                                                       {task.id === selectedId ? (
                                                             <button onClick={() => handleComplete(task)} className="edit-btn tick">
                                                                   <img width="22" height="22" src="https://static.vecteezy.com/system/resources/thumbnails/008/134/818/small/check-mark-icon-checkmark-right-symbol-tick-sign-ok-button-correct-circle-icon-free-vector.jpg" alt="create-new" />

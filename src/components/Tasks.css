@@ -549,6 +549,11 @@
       padding: 0.2rem;
 }
 
+.container.dark .task-item .task-edit option{
+      /* background-color: black; */
+      color: black;
+}
+
 .container.dark .task-form input,
 .container.dark .task-form textarea,
 .container.dark .task-form select {
