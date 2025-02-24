@@ -19,6 +19,7 @@ const Tasks1 = () => {
             'Low': 1
       };
 
+      // ----------------- Dark Mode -----------------
       useEffect(() => {
             const savedTheme = localStorage.getItem('darkMode');
             if (savedTheme === 'enabled') {
@@ -33,6 +34,8 @@ const Tasks1 = () => {
                   return newMode;
             });
       };
+      // --------------------------------------------------
+
 
       // Sort tasks by priority
       const sortByPriority = (tasksToSort) => {
@@ -49,6 +52,8 @@ const Tasks1 = () => {
             });
       };
 
+
+      // ------------------ Tasks Updates------------------ 
       const [taksUpdated, setTaksUpdated] = useState(false);
 
       // Load initial data from localStorage and then fetch from backend
@@ -72,14 +77,18 @@ const Tasks1 = () => {
                   }
             };
 
-            loadTasks();
-      }, [taksUpdated]);
+            loadTasks();      // Funcation call
 
+      }, [taksUpdated]);      // tasksUpdated making true & triggering through Edit task (handleUpdateTask)
+
+      // ---------------------------------------------------------      
       // Update localStorage whenever tasks change
       useEffect(() => {
             localStorage.setItem('tasks', JSON.stringify(tasks));
       }, [tasks]);
+      // ---------------------------------------------------------
 
+      // Add a new task
       const handleSubmit = async (e) => {
             e.preventDefault();
             if (!newTask.title.trim()) {
@@ -116,6 +125,9 @@ const Tasks1 = () => {
             }
       };
 
+      // ---------------------------------------------------------
+      
+      // Toggle task completion status by ID
       const toggleComplete = async (id, completed) => {
             try {
                   const response = await fetch(`http://localhost:5000/tasks/${id}`, {
@@ -140,6 +152,7 @@ const Tasks1 = () => {
             }
       };
 
+      // Delete task by ID
       const deleteTask = async (id) => {
             try {
                   const response = await fetch(`http://localhost:5000/tasks/${id}`, {
@@ -157,16 +170,8 @@ const Tasks1 = () => {
             }
       };
 
-      // Filter tasks after sorting by priority
-      const filteredTasks = tasks.filter(task => {
-            if (activeTab === 'completed') return task.completed;
-            if (!task.completed) {
-                  if (filter === 'All') return true;
-                  return task.priority === filter;
-            }
-            return false;
-      });
-
+      // ------------------ Edit Task ------------------
+      // state's for Edit mode...
       const [editmode, setEditmode] = useState(false);
       const [updatedTask, setupdatedTask] = useState({
             title: '',
@@ -175,6 +180,7 @@ const Tasks1 = () => {
       });
       const [selectedId, setSetselectedId] = useState(0);
 
+      // Edit task by ID (Enable Edit mode)
       const handleEdit = (task) => {
             setSetselectedId(task.id);
             setupdatedTask({
@@ -185,6 +191,7 @@ const Tasks1 = () => {
             setEditmode(!editmode);
       };
 
+      // cancel update or Edit
       const handleCancelUpdateTask = () => {
             setEditmode(!editmode);
             setSetselectedId(0);
@@ -195,18 +202,21 @@ const Tasks1 = () => {
             });
       };
 
-      const handleComplete = async (task) => {
+      // Update or Edit task by ID
+      const handleUpdateTask = async (task) => {
             try {
                   const response = await fetch(`http://localhost:5000/tasks/update/${task.id}`, {
-                        method: 'PUT',
-                        headers: {
-                              'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(updatedTask),
-                  });
+                                          method: 'PUT',
+                                          headers: {
+                                                'Content-Type': 'application/json',
+                                          },
+                                          body: JSON.stringify(updatedTask),
+                                    });
 
                   if (response.ok) {
                         setTaksUpdated(prev => !prev); // Toggle to trigger useEffect
+
+                        // Reset the state
                         setSetselectedId(0);
                         setEditmode(!editmode);
                         setupdatedTask({
@@ -215,10 +225,41 @@ const Tasks1 = () => {
                               priority: ''
                         });
                   }
-            } catch (error) {
+            } 
+            catch (error) {
                   console.log('Error updating task:', error);
             }
       };
+
+      // ------------------------------------------------------
+
+      // Filter tasks after sorting by priority
+      // const filteredTasks = tasks.filter(task => {
+      //       if (activeTab === 'completed') return task.completed;
+      //       if (!task.completed) {
+      //             if (filter === 'All') return true;
+      //             return task.priority === filter;
+      //       }
+      //       return false;
+      // });
+
+      // Filter tasks after sorting by priority
+      const filteredTasks = tasks.filter(task => {
+            if (activeTab === 'completed') {
+                // For completed tab, first check if task is completed
+                if (!task.completed) return false;
+                
+                // Then apply priority filter
+                if (filter === 'All') return true;
+                return task.priority === filter;
+            } else {
+                // For tasks tab (incomplete tasks)
+                if (task.completed) return false;
+                
+                if (filter === 'All') return true;
+                return task.priority === filter;
+            }
+      });
 
 
       return (
@@ -284,7 +325,7 @@ const Tasks1 = () => {
 
                               <div className="tasks-container">
 
-                                    {/* --------- tasks-header ---------- */}
+                                    {/* --------- Tasks table header ---------- */}
                                     <div className="tasks-header">
                                           <div className="header-title">Title</div>
                                           <div className="header-description">Description</div>
@@ -395,7 +436,7 @@ const Tasks1 = () => {
 
                                                       {/* ----------- Edit Task ---------- */}
                                                       {/* {task.id === selectedId ? (
-                                                            <button onClick={() => handleComplete(task)} className="edit-btn tick">
+                                                            <button onClick={() => handleUpdateTask(task)} className="edit-btn tick">
                                                                   <img width="22" height="22" src="https://static.vecteezy.com/system/resources/thumbnails/008/134/818/small/check-mark-icon-checkmark-right-symbol-tick-sign-ok-button-correct-circle-icon-free-vector.jpg" alt="create-new" />
                                                             </button>
                                                       ) : (
@@ -408,13 +449,12 @@ const Tasks1 = () => {
                                                       {/* ----------- Edit Task ---------- */}
                                                       {!task.completed && (
                                                             task.id === selectedId ? (
-                                                                  <button onClick={() => handleComplete(task)} className="edit-btn tick">
+                                                                  <button onClick={() => handleUpdateTask(task)} className="edit-btn tick">
                                                                         <img width="22" height="22" src="https://static.vecteezy.com/system/resources/thumbnails/008/134/818/small/check-mark-icon-checkmark-right-symbol-tick-sign-ok-button-correct-circle-icon-free-vector.jpg" alt="create-new" />
                                                                   </button>
                                                             ) : (
                                                                   <button onClick={() => handleEdit(task)} className="edit-btn">
-                                                                        <img width="30" height="30"
-                                                                              src="https://img.icons8.com/plasticine/100/create-new.png" alt="create-new" />
+                                                                        <img width="30" height="30" src="https://img.icons8.com/plasticine/100/create-new.png" alt="create-new" />
                                                                   </button>
                                                             )
                                                       )}
